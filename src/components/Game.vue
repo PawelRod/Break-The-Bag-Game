@@ -1,7 +1,7 @@
 <template>
   <div class="game">
     <!-- bag image -->
-    <div id="bag">
+    <div id="bag" v-bind:class="{burst: ended}">
     
     </div>
 
@@ -9,14 +9,14 @@
     <div class="condition__block">
       <h3>BAG CONDITION:</h3>
       <div id="bag-health">
-        <div></div>
+        <div v-bind:style="{width: health + '%'}"></div>
       </div>
     </div>
 
     <!-- game controls -->
     <div id="controls">
-      <button>PUNCH</button>
-      <button>RESTART</button>
+      <button @click="punch" v-show="!ended">PUNCH</button>
+      <button @click="restart">RESTART</button>
     </div>
   </div>
 </template>
@@ -26,11 +26,21 @@ export default {
   name: 'Game',
   data() {
     return {
-
+      health: 100,
+      ended: false,
     }
   },
   methods: {
-
+    punch: function() {
+      this.health -= 10;
+      if (this.health <= 0) {
+        this.ended = true;
+      }
+    },
+    restart: function() {
+      this.health = 100;
+      this.ended = false;
+    }
   },
   computed: {
 
@@ -55,6 +65,10 @@ export default {
     background: url(/assets/bag.png) center no-repeat;
     background-size: 80%;
   }
+  #bag.burst {
+    background: url(/assets/bag-burst.png) center no-repeat;
+    background-size: 80%;
+  }
   .condition__block {
     border: 2px solid black;
         border-radius: 10px;
@@ -66,6 +80,7 @@ export default {
     width: 200px;
     border: 3px solid black;
     margin: 20px auto;
+    background: black;
   }
   #bag-health div {
       height: 20px;
